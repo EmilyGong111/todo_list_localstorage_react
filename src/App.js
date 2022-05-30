@@ -4,21 +4,23 @@ import AddItem from './AddItem';
 import Content from './Content';
 import Footer from './Footer';
 import { useState, useEffect } from 'react';
+import apiRequest from './apiRequest'; //a fetch data function accepts url requestOptions and errorMassage
 
 
 function App() {
-  const APT_URL = "http://localhost:3500/items";
+  const API_URL = "http://localhost:3500/items";
 
   const [items, setItems] = useState([])
   const [newItem, setNewItem] = useState('')
   const [search, setSearch] = useState('')
   const [fetchError, setFetchError] = useState(null);
   const [isLoading, setIsLoading] = useState(true)
+ 
 
   useEffect(()=>{
    const fetchItems = async () =>{
      try{
-       const response = await fetch(APT_URL);
+       const response = await fetch(API_URL);
        if(!response.ok) throw Error('Did not receive expected data')
        const listItems = await response.json();
        setItems(listItems);
@@ -29,20 +31,44 @@ function App() {
        setIsLoading(false);
      }
    };
-   setTimeout(()=>fetchItems(), 2000)
+   setTimeout(()=>fetchItems(), 2000) 
   //  fetchItems();
   },[])
 
-  const addItem = (item) => {
+  const addItem = async (item) => {
     const id = items.length ? items[items.length - 1].id + 1 : 1;
     const myNewItem = { id, checked: false, item };
     const listItems = [...items, myNewItem];
     setItems(listItems);
+//post an item in db
+    const postOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(myNewItem)
+    }
+    // async call apiRequest function
+    const result = await apiRequest(API_URL, postOptions);
+    if (result) setFetchError(result);
   }
 
-  const handleCheck = (id) => {
+  const handleCheck = async (id) => {
     const listItems = items.map((item) => item.id === id ? { ...item, checked: !item.checked } : item);
     setItems(listItems);
+  //update an item in db
+    const myItem = listItems.filter((item)=> item.id === id);
+    const updateOptions = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({checked: myItem[0].checked})
+    }
+    const reqUrl = `${API_URL}/${id}`
+    // async call apiRequest function
+    const result = await apiRequest(reqUrl, updateOptions);
+    if (result) setFetchError(result);  
   }
 
   const handleDelete = (id) => {

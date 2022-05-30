@@ -1,19 +1,29 @@
 {
-    "items": [
-        {
-            "id": 1,
-            "checked":false,
-            "item": "Work"
-        },
-        {
-            "id": 2,
-            "checked":false,
-            "item": "Study"
-        },
-        {
-            "id": 3,
-            "checked":false,
-            "item": "Enjoy life"
-        }
-    ]
+  "items": [
+    {
+      "id": 1,
+      "checked": true,
+      "item": "Work"
+    },
+    {
+      "id": 2,
+      "checked": false,
+      "item": "Study"
+    },
+    {
+      "id": 3,
+      "checked": false,
+      "item": "Enjoy life"
+    },
+    {
+      "id": 4,
+      "checked": false,
+      "item": "climbing"
+    },
+    {
+      "id": 5,
+      "checked": true,
+      "item": "milk"
+    }
+  ]
 }
