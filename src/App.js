@@ -34,13 +34,13 @@ function App() {
    setTimeout(()=>fetchItems(), 2000) 
   //  fetchItems();
   },[])
-
+//add item
   const addItem = async (item) => {
     const id = items.length ? items[items.length - 1].id + 1 : 1;
     const myNewItem = { id, checked: false, item };
     const listItems = [...items, myNewItem];
     setItems(listItems);
-//post an item in db
+    //post an item in db
     const postOptions = {
       method: "POST",
       headers: {
@@ -52,7 +52,7 @@ function App() {
     const result = await apiRequest(API_URL, postOptions);
     if (result) setFetchError(result);
   }
-
+//check item
   const handleCheck = async (id) => {
     const listItems = items.map((item) => item.id === id ? { ...item, checked: !item.checked } : item);
     setItems(listItems);
@@ -70,10 +70,15 @@ function App() {
     const result = await apiRequest(reqUrl, updateOptions);
     if (result) setFetchError(result);  
   }
-
-  const handleDelete = (id) => {
+//delete item
+  const handleDelete = async (id) => {
     const listItems = items.filter((item) => item.id !== id);
     setItems(listItems);
+
+    const deleteOptions = { method : "DELETE"};
+    const reqUrl = `${API_URL}/${id}`;
+    const result = await apiRequest(reqUrl, deleteOptions);
+    if (result) setFetchError(result);  
   }
 
   const handleSubmit = (e) => {
